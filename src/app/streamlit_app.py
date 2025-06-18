@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
+from rapidfuzz import process, fuzz
 import re
 
-# Anna sarakeotsikot suoraan:
 columns = [
     'Category Code',
     'Minor Code',
@@ -11,14 +11,12 @@ columns = [
     'Full Description',
     'Category Title'
 ]
-
-# Lue ICD-10-koodit
 icd10 = pd.read_csv('data/icd10_codes.csv', header=None, names=columns)
 
 def normalize_code(code):
     return code.replace('.', '')
 
-def extract_icd10(text):
+def extract_icd10_codes(text):
     results = []
     found_codes = re.findall(r'\b[A-Z]\d{2}(?:\.\d+)?\b', text)
     for code in found_codes:
@@ -36,16 +34,27 @@ def extract_icd10(text):
         })
     return results
 
-# --- STREAMLIT UI ---
+def fuzzy_icd10_mapping(term, icd10_df, limit=3):
+    choices = icd10_df['Abbreviated Description'].astype(str).tolist()
+    matches = process.extract(
+        term, choices, scorer=fuzz.token_set_ratio, limit=limit
+    )
+    results = []
+    for match, score, idx in matches:
+        if score > 70:
+            row = icd10_df.iloc[idx]
+            results.append({
+                'Koodi': row['Diagnosis Code'],
+                'Selite': match,
+                'Osuma (%)': score
+            })
+    return results
+
 st.title("ICD-10 tekstinlouhinta-demo")
 
-text_input = st.text_area(
-    "Syötä vapaateksti (esim. potilaskertomus, diagnoosilistaus tms.):",
-    height=150
-)
-
-if st.button("Etsi ICD-10-koodit"):
-    results = extract_icd10(text_input)
+text_input = st.text_area("Syötä teksti:")
+if st.button("Etsi suorat ICD-10-koodit"):
+    results = extract_icd10_codes(text_input)
     if results:
         st.success(f"Löytyi {len(results)} koodia!")
         st.table(results)
@@ -53,4 +62,15 @@ if st.button("Etsi ICD-10-koodit"):
         st.warning("Ei löytynyt yhtään ICD-10-koodia.")
 
 st.markdown("---")
-st.markdown("Demo by Lauri Virtanen | Sisältää noin 70 000 koodia, mutta ei ole kokonaan kattava listaus!")
+
+free_term = st.text_input("Syötä vapaa hakutermi (englanniksi):")
+if st.button("Fuzzy-haku ICD-10-sanastoon"):
+    if free_term.strip():
+        results = fuzzy_icd10_mapping(free_term, icd10)
+        if results:
+            st.success("Parhaat osumat:")
+            st.table(results)
+        else:
+            st.warning("Ei löytynyt hyviä osumia.")
+    else:
+        st.info("Anna hakutermi!")
