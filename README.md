@@ -44,22 +44,6 @@ Soveltuu **sairauskertomusten automaattiseen kooditukseen**, tietopyyntöihin ja
 
 ---
 
-## 🛠️ **Rakenne**
-
-├── data/
-│ ├── icd10_codes.csv # ICD-10 koodisto (CSV, ei mukana tässä repoissa)
-│ └── sample_texts.txt # Esimerkkitekstejä (voit luoda lisää)
-├── output/
-│ └── top_icd10_codes.png # Visualisointi: yleisimmät koodit
-├── src/
-│ ├── app.py # Streamlit UI
-│ ├── analyze_codes.py # Analyysit ja visualisoinnit
-│ └── extractor.py # (vaihtoehtoinen: pelkkä tekstin purku konsolissa)
-├── requirements.txt
-└── README.md
-
-
----
 
 ## 📊 **Esimerkkikuva**
 
@@ -67,14 +51,6 @@ Soveltuu **sairauskertomusten automaattiseen kooditukseen**, tietopyyntöihin ja
 
 ---
 
-## 💡 **Jatkokehitysideoita**
-
-- Lauseentason NER-mallit (esim. Hugging Face, ClinicalBERT)
-- Kielituen parantaminen suomeksi
-- Integrointi potilastietojärjestelmään
-- Käyttöliittymän ja visualisointien laajennus
-
----
 
 ## 👤 **Tekijä**
 
