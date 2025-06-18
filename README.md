@@ -3,7 +3,7 @@
 Tämä projekti on kevyt ja selkeä demonstraatio ICD-10-tautiluokkien tunnistamisesta vapaasta tekstistä Pythonilla. Mukana sekä **suora koodin poiminta** tekstistä (regex), että **fuzzy-haku** (epäselvät termit/diagnositekstit).
 
 Soveltuu **sairauskertomusten automaattiseen kooditukseen**, tietopyyntöihin ja opetustarkoituksiin. Projektin voi ajaa paikallisesti ja siinä käytetään vain avoimen lähdekoodin kirjastoja.
-
+Linkki Streamlit demoon: https://laovirtanen-icd10-nlp-extractor-srcappstreamlit-app-w9rnoz.streamlit.app/
 ---
 
 ## 🔍 **Ominaisuudet**
